@@ -13,8 +13,9 @@ next_id = 3
 
 
 def apply_default_priority(task):
-    """Apply the default priority when a task has no priority."""
-    task.setdefault("priority", DEFAULT_PRIORITY)
+    """Apply the default priority when a task has no valid priority."""
+    if task.get("priority") not in PRIORITIES:
+        task["priority"] = DEFAULT_PRIORITY
     return task
 
 
@@ -42,7 +43,7 @@ def add_task():
         return jsonify({"error": "Title is required"}), 400
 
     priority = data.get('priority', DEFAULT_PRIORITY)
-    if priority not in PRIORITIES:
+    if not isinstance(priority, str) or priority not in PRIORITIES:
         return jsonify({
             "error": "Priority must be Low, Medium, or High"
         }), 400
