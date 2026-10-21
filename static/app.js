@@ -12,10 +12,11 @@ async function fetchTasks() {
         const title = document.createElement('span');
         const priority = document.createElement('span');
         const deleteButton = document.createElement('button');
+        const taskPriority = task.priority || 'Medium';
 
         title.textContent = task.title;
-        priority.textContent = `Priority: ${task.priority || 'Medium'}`;
-        priority.className = 'priority';
+        priority.textContent = `Priority: ${taskPriority}`;
+        priority.className = `priority ${taskPriority.toLowerCase()}`;
         deleteButton.textContent = 'Delete';
         deleteButton.className = 'delete-btn';
         deleteButton.addEventListener('click', () => deleteTask(task.id));
@@ -33,7 +34,7 @@ async function addTask() {
     const titleInput = document.getElementById('task-title');
     const priorityInput = document.getElementById('task-priority');
     const title = titleInput.value.trim();
-    const priority = priorityInput.value;
+    const priority = priorityInput.value || 'Medium';
 
     if (!title) return;
 

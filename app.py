@@ -12,9 +12,18 @@ tasks = [
 next_id = 3
 
 
+def normalize_priority(priority):
+    """Return the default priority for missing or empty values."""
+    if priority is None:
+        return DEFAULT_PRIORITY
+    if isinstance(priority, str) and not priority.strip():
+        return DEFAULT_PRIORITY
+    return priority
+
+
 def apply_default_priority(task):
     """Apply the default priority when a task has no priority."""
-    task.setdefault("priority", DEFAULT_PRIORITY)
+    task["priority"] = normalize_priority(task.get("priority"))
     return task
 
 
@@ -41,8 +50,8 @@ def add_task():
     if not isinstance(data, dict) or not data.get('title'):
         return jsonify({"error": "Title is required"}), 400
 
-    priority = data.get('priority', DEFAULT_PRIORITY)
-    if priority not in PRIORITIES:
+    priority = normalize_priority(data.get('priority'))
+    if not isinstance(priority, str) or priority not in PRIORITIES:
         return jsonify({
             "error": "Priority must be Low, Medium, or High"
         }), 400
